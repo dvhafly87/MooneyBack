@@ -74,7 +74,7 @@ public class MemberDTO {
 	}
 
 	public Date getBir() {
-		return bir;
+		return bir;	
 	}
 
 	public void setBir(Date bir) {

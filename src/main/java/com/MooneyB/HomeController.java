@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.MooneyB.Member.MemberDAO;
 import com.MooneyB.Member.MemberDTO;
 
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
@@ -25,17 +26,13 @@ public class HomeController {
 
 	@Autowired
 	private MemberDAO mDAO;
-
-	@PostMapping("/test")
-	@ResponseBody
-	public String test() {
-		System.out.println("HI");
-		return "test ok";
-	}
-
+	
 	@ResponseBody
 	@PostMapping("/do.registerpage")
-	public ResponseEntity<?> registerUser(@RequestBody MemberDTO MDTO) {
-	    return null;
+	public ResponseEntity<?> registerUser(@RequestBody MemberDTO MDTO,
+			@RequestParam("photoTemp") MultipartFile mf, 
+			HttpServletRequest req) {
+		mDAO.getSaveMemberData(MDTO, mf, req);
+		return null;
 	}
 }

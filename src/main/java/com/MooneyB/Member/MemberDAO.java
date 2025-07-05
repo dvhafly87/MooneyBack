@@ -32,7 +32,7 @@ public class MemberDAO {
 	@Autowired
 	private MemberRepo mr;
 	
-	@Value("${rty.member.image}")
+	@Value("${mem.member.image}")
 	private String memberFolder;
 
 	@Value("${member.photo.size}")
@@ -50,11 +50,7 @@ public class MemberDAO {
 			mf.transferTo(new File(memberFolder + "/" + fileName));
 			MDTO.setPphoto(fileName);
 			MDTO.setPw(bcpe.encode(MDTO.getPw()));
-			String bd = String.format("%s%02d%02d", req.getParameter("y"),
-					Integer.parseInt(req.getParameter("m")), Integer.parseInt(req.getParameter("d")));
-			
-			Date birthday = sdf.parse(bd);
-			MDTO.setBir(birthday);
+			MDTO.setBir(MDTO.getBir());
 
 			if (mr.existsById(MDTO.getId())) {
 				throw new Exception();
