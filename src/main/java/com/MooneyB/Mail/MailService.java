@@ -9,7 +9,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 @RequiredArgsConstructor
 public class MailService {
 
-    public static JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
     private static final String senderEmail= "dvhafly88@naver.com";
     private static int number;
 

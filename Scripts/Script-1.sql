@@ -9,15 +9,19 @@ CREATE TABLE Mooney_Member(
 	MMEM_PNT NUMBER(10) DEFAULT 0 CHECK (MMEM_PNT >= 0) -- 음수 방지
 );
 
+INSERT INTO VALUES('TTTT', 12345,'')
+
 CREATE SEQUENCE MMEM_SEQ;
 DROP  SEQUENCE MMEM_SEQ;
 
 SELECT *
 FROM Mooney_Member;
 
+tttt1234    $2a$10$PsGn915PR1rV9QBVpya2XusIBQmeBtGkjrmYuekqkHWyG3QTYoX5u    다운로드_2f1ecf2a-b3b6-4104-acd8-aee2f0af7e08.jpeg hi? 2022-01-01 00:00:00.000 2025-07-11 13:38:03.000 0
+
 DELETE 
 FROM MOONEY_MEMBER
-WHERE MMEM_ID = 'testuser1';
+WHERE MMEM_ID = 'Test2User';
 
 
 --수입/지출 테이블

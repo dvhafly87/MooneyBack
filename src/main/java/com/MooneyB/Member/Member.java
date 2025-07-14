@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "Mooney_Member")
-public class MemberDTO {
+public class Member {
 	
 	@Id
 	@Column(name = "MMEM_ID")
