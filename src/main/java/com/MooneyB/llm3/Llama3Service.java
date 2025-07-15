@@ -31,4 +31,7 @@ public class Llama3Service {
             .bodyToMono(String.class)
             .block(); 
     }
+	public void DataAnalyzing(String userinput, String useinfo) {
+		
+	}
 }
