@@ -1,13 +1,16 @@
 package com.MooneyB.Notification;
 
+
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.MooneyB.Member.Member;
 import com.MooneyB.Member.MemberRepo;
+import com.MooneyB.common.exceptions.MemberNotFoundException;
 
 
 
@@ -18,7 +21,6 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final MemberRepo memberRepository;
 
-    @Autowired
     public NotificationService(NotificationRepository notificationRepository, MemberRepo memberRepository) {
         this.notificationRepository = notificationRepository;
         this.memberRepository = memberRepository;
@@ -29,8 +31,10 @@ public class NotificationService {
 		return (List<Notification>) notificationRepository.findByMember_Mmemid(memberId);
 	}
 	
-	public Notification createNotification(Notification notification) {
-//		notification.setMnofReadYn(false);
+	public Notification createNotification(Notification notification, String memberId) {
+		Member m = memberRepository.findById(memberId)
+				.orElseThrow(() -> new MemberNotFoundException("Member not found with ID: " + memberId));
+		notification.setMember(m);
 		return notificationRepository.save(notification);
 	}
 	
