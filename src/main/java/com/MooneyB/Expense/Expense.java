@@ -3,6 +3,7 @@ package com.MooneyB.Expense;
 
 import java.time.LocalDate;
 
+import com.MooneyB.Category.Category;
 import com.MooneyB.Member.Member;
 
 import jakarta.persistence.Column;
@@ -64,5 +65,10 @@ public class Expense {
 	@ManyToOne
 	@JoinColumn(name = "MEXP_MMEM_ID", referencedColumnName = "MMEM_ID", nullable = false)
 	private Member member; 
+	
+	// --- Category 엔티티와 Many-to-One 관계 추가 ---
+    @ManyToOne // Expense (다) -> Category (일) 관계
+    @JoinColumn(name = "MEXP_MCAT_ID", referencedColumnName = "MCAT_ID", nullable = false) // NOT NULL로 변경
+    private Category category;
 	
 }
