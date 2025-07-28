@@ -1,14 +1,10 @@
 package com.MooneyB.Diary;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.MooneyB.common.exceptions.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController 
@@ -86,9 +82,6 @@ public class DiaryController {
     public ResponseEntity<Diary> updateDiary(
             @PathVariable("diaryId") Long diaryId,
             @RequestBody Diary diary) {
-        // PathVariable의 diaryId와 RequestBody의 mdiaId가 일치하는지 확인하거나,
-        // RequestBody의 mdiaId를 우선시하여 서비스에 전달할 수 있습니다.
-        // 여기서는 RequestBody의 diary 객체에 mdiaId를 설정하여 서비스에 전달합니다.
         diary.setMdiaId(diaryId); 
         Diary updatedDiary = diaryService.updateDiary(diary);
         return new ResponseEntity<>(updatedDiary, HttpStatus.OK); // 200 OK
