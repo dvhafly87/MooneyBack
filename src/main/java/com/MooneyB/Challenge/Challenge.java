@@ -50,6 +50,5 @@ public class Challenge {
 
     @ManyToOne
     @JoinColumn(name = "MCHL_MMEM_ID", referencedColumnName = "MMEM_ID", nullable = false)
-    @JsonIgnore
     private Member member; 
 }

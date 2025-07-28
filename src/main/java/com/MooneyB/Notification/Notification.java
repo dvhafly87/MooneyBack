@@ -53,7 +53,6 @@ public class Notification {
 	
 	@ManyToOne
 	@JoinColumn(name = "MNOF_MMEM_ID", referencedColumnName = "MMEM_ID", nullable = false)
-	@JsonIgnore
 	private Member member; 
 
 }
