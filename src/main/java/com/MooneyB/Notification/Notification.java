@@ -4,6 +4,7 @@ package com.MooneyB.Notification;
 import java.time.LocalDateTime;
 
 import com.MooneyB.Member.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -52,6 +53,7 @@ public class Notification {
 	
 	@ManyToOne
 	@JoinColumn(name = "MNOF_MMEM_ID", referencedColumnName = "MMEM_ID", nullable = false)
+	@JsonIgnore
 	private Member member; 
 
 }
