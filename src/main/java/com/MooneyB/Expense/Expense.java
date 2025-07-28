@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 import com.MooneyB.Category.Category;
 import com.MooneyB.Member.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -69,6 +70,7 @@ public class Expense {
 	// --- Category 엔티티와 Many-to-One 관계 추가 ---
     @ManyToOne // Expense (다) -> Category (일) 관계
     @JoinColumn(name = "MEXP_MCAT_ID", referencedColumnName = "MCAT_ID", nullable = false) // NOT NULL로 변경
+    @JsonIgnore
     private Category category;
 	
 }

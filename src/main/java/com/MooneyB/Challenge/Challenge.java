@@ -1,6 +1,7 @@
 package com.MooneyB.Challenge; // 적절한 패키지명으로 변경해주세요.
 
 import com.MooneyB.Member.Member; // Member 엔티티의 패키지 경로를 정확히 입력해주세요.
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -49,5 +50,6 @@ public class Challenge {
 
     @ManyToOne
     @JoinColumn(name = "MCHL_MMEM_ID", referencedColumnName = "MMEM_ID", nullable = false)
+    @JsonIgnore
     private Member member; 
 }
