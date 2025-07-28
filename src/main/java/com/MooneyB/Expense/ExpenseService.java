@@ -4,9 +4,15 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils; 
+import org.springframework.beans.BeanWrapper; 
+import org.springframework.beans.BeanWrapperImpl; 
+import java.beans.FeatureDescriptor; 
+import java.util.stream.Stream;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.MooneyB.common.exceptions.CategoryNotFoundException;
+import com.MooneyB.common.exceptions.ExpenseNotFoundException;
 import com.MooneyB.common.exceptions.MemberNotFoundException;
 
 import com.MooneyB.Category.Category;
@@ -87,6 +93,28 @@ public class ExpenseService{
         return er.findByMember_Mmemid(memberId);
     }
 
+    public Expense updateExpense(Expense updatedExpenseData, String memberId, Long categoryId) {
+
+        Expense existingExpense = er.findById(updatedExpenseData.getMexpId())
+            .orElseThrow(() -> new ExpenseNotFoundException("Expense not found with ID: " + updatedExpenseData.getMexpId()));
+
+        Member member = mr.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("Member not found with ID: " + memberId));
+        existingExpense.setMember(member);
+
+        if (categoryId != null) {
+            Category category = cr.findById(categoryId)
+                    .orElseThrow(() -> new CategoryNotFoundException("Category not found with ID: " + categoryId));
+            existingExpense.setCategory(category);
+        }
+
+        copyNonNullProperties(updatedExpenseData, existingExpense);
+
+        // 4. 업데이트된 엔티티를 저장합니다.
+        return er.save(existingExpense);
+    }
+    
+    
     // 지출/수입 기록 삭제
     public void deleteExpense(Long expenseId) {
         er.deleteById(expenseId);
@@ -158,5 +186,20 @@ public class ExpenseService{
     @Transactional(readOnly = true)
     public List<Expense> getExpensesByCategoryIdAndMemberId(String memberId, Long categoryId) {
         return er.findByCategory_McatIdAndMember_Mmemid(categoryId, memberId);
+    }
+    
+    private void copyNonNullProperties(Object src, Object target) {
+        // 소스 객체의 래퍼를 생성
+        final BeanWrapper srcWrapper = new BeanWrapperImpl(src);
+
+        // 소스 객체에서 null인 속성들의 이름을 가져옴.
+        String[] nullPropertyNames = Stream.of(srcWrapper.getPropertyDescriptors())
+            .map(FeatureDescriptor::getName)
+            .filter(name -> srcWrapper.getPropertyValue(name) == null)
+            .toArray(String[]::new);
+
+        // null이 아닌 속성들만 타겟 객체로 복사.
+        // getPropertyNames(src, nullPropertyNames)는 null인 속성을 제외하고 복사
+        BeanUtils.copyProperties(src, target, nullPropertyNames);
     }
 }
