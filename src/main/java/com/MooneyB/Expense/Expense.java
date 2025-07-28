@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 import com.MooneyB.Category.Category;
 import com.MooneyB.Member.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

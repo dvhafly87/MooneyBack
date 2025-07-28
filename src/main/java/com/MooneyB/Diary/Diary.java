@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.MooneyB.Member.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,6 +48,7 @@ public class Diary {
 	private String mdiaContent;
 	
 	@ManyToOne(fetch = FetchType.LAZY) // 지연 로딩 (필요할 때만 회원 정보 로드)
-    @JoinColumn(name = "MDIA_MMEM_ID", nullable = false) // 실제 Oracle 외래 키 컬럼명과 일치
+    @JoinColumn(name = "MDIA_MMEM_ID", nullable = false) 
+	@JsonIgnore
     private Member member;
 }
