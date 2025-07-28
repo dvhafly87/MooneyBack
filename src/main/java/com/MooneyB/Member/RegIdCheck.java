@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RegIdCheck {
 	
-	//회원가입 아이디 중복체크
+	//회원가입 아이디 중복체크용 및 세션용 아이디 정보 저장
 	private String regid;
 	
 	//회원가입 닉네임 중복체크

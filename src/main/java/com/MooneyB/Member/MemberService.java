@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +17,6 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class MemberService {
-
 
 	@Autowired
 	private BCryptPasswordEncoder bcpe;
@@ -91,9 +91,11 @@ public class MemberService {
 					loginToken.setLoginId(dbMember.getMmemid());
 					loginToken.setLoginPw(dbMember.getMmempw());
 
-					req.getSession().setAttribute("loginMember", dbMember);
-					req.getSession().setAttribute("LoginToken", loginToken);
-
+					if(loginToken != null) {
+						req.getSession().setAttribute("loginMember", dbMember);
+						req.getSession().setAttribute("LoginToken", loginToken);
+						
+					}
 					result.put("loginok", true);
 					return true;
 				} else {

@@ -52,6 +52,13 @@ public class ExpenseController {
         return new ResponseEntity<>(expenses, HttpStatus.OK); // 200 OK
     }
 
+    // 👤 회원 ID로 모든 지출/수입 기록 조회
+    
+    @PutMapping("/member/{memberId}")
+    public ResponseEntity<Expense> updateExpense(@RequestBody Expense expense, @PathVariable("memberId") String memberId, @RequestParam("mcatId") Long mcatId) {
+        Expense createdExpense = expenseService.updateExpense(expense, memberId, mcatId);
+        return new ResponseEntity<>(createdExpense, HttpStatus.CREATED);
+    }
    
 
     // 🗓️ 날짜 범위로 지출/수입 기록 조회 (추가된 기능)

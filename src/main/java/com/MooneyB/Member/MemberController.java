@@ -86,32 +86,32 @@ public class MemberController {
 
 	@PostMapping(value = "/do.login")
 	public ResponseEntity<?> Login(@RequestBody LoginDTO lDTO, HttpServletRequest req) {
-		Map<String, Object> result = new HashMap<>();
+			Map<String, Object> result = new HashMap<>();
 
-		// 로그인 검증
-		boolean loginSuccess = mDAO.login(lDTO, req, result);
+			// 로그인 검증
+			boolean loginSuccess = mDAO.login(lDTO, req, result);
 
-		if (loginSuccess) {
-			// 세션에서 로그인된 사용자 정보 가져오기
-			Member loginMember = (Member) req.getSession().getAttribute("loginMember");
-			LoginDTO loginToken = (LoginDTO) req.getSession().getAttribute("LoginToken");
+			if (loginSuccess) {
+				// 세션에서 로그인된 사용자 정보 가져오기
+				Member loginMember = (Member) req.getSession().getAttribute("loginMember");
+				LoginDTO LoginToken = (LoginDTO) req.getSession().getAttribute("LoginToken");
+				System.out.println("Login 세션 ID: " + req.getSession().getId());
+				if (loginMember != null && LoginToken != null) {
+					
+					// 세션 타임아웃 설정 (30분)
+					req.getSession().setMaxInactiveInterval(60 * 60);
 
-			if (loginMember != null && loginToken != null) {
-				// 세션 타임아웃 설정 (30분)
-				req.getSession().setMaxInactiveInterval(60 * 60);
+					Map<String, Object> tokenData = new HashMap<>();
+					tokenData.put("loginId", LoginToken.getLoginId());
+					tokenData.put("sessionId", req.getSession().getId());
+					tokenData.put("loginTime", System.currentTimeMillis());
 
-				Map<String, Object> tokenData = new HashMap<>();
-				tokenData.put("loginId", loginToken.getLoginId());
-				tokenData.put("sessionId", req.getSession().getId());
-				tokenData.put("loginTime", System.currentTimeMillis());
-
-				return ResponseEntity.ok().body(
-						Map.of("isLogined", true, "token", tokenData, "userInfo", Map.of("id", loginMember.getMmemid(),
-								"nick", loginMember.getMmemnick(), "point", loginMember.getMmemppnt())));
+					return ResponseEntity.ok().body(
+							Map.of("isLogined", true, "token", tokenData, "userInfo", Map.of("id", loginMember.getMmemid(),
+									"nick", loginMember.getMmemnick(), "point", loginMember.getMmemppnt())));
+				}
 			}
-		}
-
-		return ResponseEntity.ok().body(Map.of("isLogined", false));
+			return ResponseEntity.ok().body(Map.of("isLogined", false));
 	}
 
 	@PostMapping(value = "/do.logincheck")
@@ -120,22 +120,28 @@ public class MemberController {
 
 		// 세션에서 로그인 정보 확인
 		Member loginMember = (Member) req.getSession().getAttribute("loginMember");
-		LoginDTO loginToken = (LoginDTO) req.getSession().getAttribute("LoginToken");
+		LoginDTO LoginToken = (LoginDTO) req.getSession().getAttribute("LoginToken");
 
-		if (loginMember != null && loginToken != null) {
+		if (loginMember != null && LoginToken != null) {
 			// 요청된 ID와 세션의 ID가 일치하는지 확인
-			if (loginToken.getLoginId().equals(RIC.getRegid())) {
+			if (LoginToken.getLoginId().equals(RIC.getRegid())) {
 				result.put("isLogined", true);
 				result.put("userInfo", Map.of("id", loginMember.getMmemid(), "nick", loginMember.getMmemnick(), "point",
 						loginMember.getMmemppnt()));
 				result.put("sessionValid", true);
-				System.out.println("세션 연장됨");
-				req.getSession().setMaxInactiveInterval(60 * 60);
+				//세션연장처리
+				req.getSession().setMaxInactiveInterval(60 * 60000);
+				
+				System.out.println("세션 연장 처리됨");
 			} else {
 				result.put("isLogined", false);
 				result.put("sessionValid", false);
+				System.out.println(RIC.getRegid());
+				System.out.println(LoginToken.getLoginId());
+				System.out.println("세션에 저장된 Id와 입력된 아이디가 일치하지않습니다.");
 			}
 		} else {
+			System.out.println("세션이 감지되지 않습니다.");
 			result.put("isLogined", false);
 			result.put("sessionValid", false);
 		}
@@ -150,6 +156,7 @@ public class MemberController {
 		try {
 			// 세션 무효화 시킴
 			req.getSession().invalidate();
+			
 			result.put("logoutSuccess", true);
 		} catch (Exception e) {
 			result.put("logoutSuccess", false);
@@ -162,22 +169,26 @@ public class MemberController {
 	@PostMapping(value = "/do.MeminfoCheck")
 	public ResponseEntity<?> meminfo(HttpServletRequest req, @RequestBody RegIdCheck RIC) {
 		Map<String, Object> meminfoMap = new HashMap<>();
+		
 		Member loginMember = (Member) req.getSession().getAttribute("loginMember");
-		LoginDTO loginToken = (LoginDTO) req.getSession().getAttribute("LoginToken");
-		System.out.println(loginMember);
-		System.out.println(loginToken);
-		if (loginToken.getLoginId().equals(RIC.getRegid())) {
-			System.out.println("매핑 실행");
-			meminfoMap.put("id", loginMember.getMmemid());
-			meminfoMap.put("pw", loginMember.getMmempw());
-			meminfoMap.put("bir", loginMember.getMmembir());
-			meminfoMap.put("nick", loginMember.getMmemnick());
-			meminfoMap.put("pphoto", loginMember.getMmempphoto());
-			meminfoMap.put("regd", loginMember.getMmemregd());
-			meminfoMap.put("ppnt", loginMember.getMmemppnt());
-			return ResponseEntity.ok().body(Map.of("Meminfo", meminfoMap));
+		LoginDTO LoginToken = (LoginDTO) req.getSession().getAttribute("LoginToken");
+		
+		System.out.println("Meminfo 세션 ID: " + req.getSession().getId());
+		System.out.println(RIC.getRegid());
+		
+		if(loginMember != null && LoginToken != null) {
+			if (LoginToken.getLoginId().equals(RIC.getRegid())) {
+				System.out.println("매핑 실행");
+				meminfoMap.put("id", loginMember.getMmemid());
+				meminfoMap.put("pw", loginMember.getMmempw());
+				meminfoMap.put("bir", loginMember.getMmembir());
+				meminfoMap.put("nick", loginMember.getMmemnick());
+				meminfoMap.put("pphoto", loginMember.getMmempphoto());
+				meminfoMap.put("regd", loginMember.getMmemregd());
+				meminfoMap.put("ppnt", loginMember.getMmemppnt());
+				return ResponseEntity.ok().body(Map.of("Meminfo", meminfoMap));
+			}
 		}
-
 		return ResponseEntity.ok().body(Map.of("Meminfo", "nothing"));
 	}
 
@@ -201,7 +212,9 @@ public class MemberController {
 			@RequestParam(name="epw", required = false) String pw,
 			@RequestParam(name="enick", required = false) String nck,
 			@RequestParam("eid") String eid, HttpServletRequest req) {
+		
 		Map<String, Object> updateRetunerMap = new HashMap<>();
+		
 		Member loginMember = (Member) req.getSession().getAttribute("loginMember");
 		LoginDTO loginToken = (LoginDTO) req.getSession().getAttribute("LoginToken");
 
