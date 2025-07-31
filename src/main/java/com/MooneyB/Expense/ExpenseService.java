@@ -62,7 +62,7 @@ public class ExpenseService{
                 Expense pendingExpense = new Expense();
                 pendingExpense.setMember(member); 
                 pendingExpense.setCategory(category); 
-                pendingExpense.setMexpDt(null); 
+                pendingExpense.setMexpDt(nextDueDate); 
                 pendingExpense.setMexpAmt(expense.getMexpAmt());
                 pendingExpense.setMexpDec(expense.getMexpDec());
                 pendingExpense.setMexpType(expense.getMexpType());
@@ -168,7 +168,7 @@ public class ExpenseService{
             if (nextDueDate != null) {
                 Expense nextExpense = new Expense();
                 nextExpense.setMember(expense.getMember()); // 연관된 Member 객체 복사
-                nextExpense.setMexpDt(null); // 실제 발생일은 아직 없으므로 null
+                nextExpense.setMexpDt(nextDueDate); // 실제 발생일은 아직 없으므로 null
                 nextExpense.setMexpAmt(expense.getMexpAmt());
                 nextExpense.setMexpDec(expense.getMexpDec());
                 nextExpense.setMexpType(expense.getMexpType());

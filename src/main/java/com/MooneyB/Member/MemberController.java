@@ -83,6 +83,32 @@ public class MemberController {
 
 		return result;
 	}
+	
+	@PostMapping("/do.passwordcheck")
+	public Map<String, Boolean> pwscheck(@RequestBody RegIdCheck RIC, HttpServletRequest req){
+		Map<String, Boolean> result = new HashMap<>();
+		
+		Member loginMember = (Member) req.getSession().getAttribute("loginMember");
+		LoginDTO loginToken = (LoginDTO) req.getSession().getAttribute("LoginToken");
+		
+		
+		if(loginMember != null && loginToken != null && loginToken.getLoginId().equals(RIC.getRegid())) {
+			System.out.println(RIC.getRegpw());
+			System.out.println(loginMember.getMmempw());
+			if(bcpe.matches(RIC.getRegpw(), loginMember.getMmempw())) {
+				System.out.println("입력하신 비밀번호는 일치합니다");
+				result.put("pwpossible", true);
+			} else {
+				System.out.println("비밀번호 일치하지 않음");
+				result.put("pwpossible", false);
+			}
+		} else {
+			req.getSession().invalidate();
+			result.put("pwpossible", false);
+		}
+		return result;
+	}
+	
 
 	@PostMapping(value = "/do.login")
 	public ResponseEntity<?> Login(@RequestBody LoginDTO lDTO, HttpServletRequest req) {
@@ -204,7 +230,7 @@ public class MemberController {
 		String contentT = Files.probeContentType(fileUploadPath);
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentT)).body(resc);
 	}
-
+	
 	@PostMapping("/member.info.edit")
 	public ResponseEntity<?> MeminfoEdit(
 			@RequestParam(name = "ephoto", required = false) MultipartFile eph,
@@ -214,7 +240,7 @@ public class MemberController {
 			@RequestParam("eid") String eid, HttpServletRequest req) {
 		
 		Map<String, Object> updateRetunerMap = new HashMap<>();
-		
+		System.out.println(eph+nck+pw);
 		Member loginMember = (Member) req.getSession().getAttribute("loginMember");
 		LoginDTO loginToken = (LoginDTO) req.getSession().getAttribute("LoginToken");
 
@@ -224,7 +250,7 @@ public class MemberController {
 		}
 		return ResponseEntity.ok().body(Map.of("resultD", updateRetunerMap));
 	}
-
+	
 	@PostMapping("/member.exit")
 	public ResponseEntity<?> memberExit(HttpServletRequest req, @RequestBody RegIdCheck RIC) {
 		Member MDTO = (Member) req.getSession().getAttribute("loginMember");

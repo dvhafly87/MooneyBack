@@ -15,6 +15,8 @@ public class RegIdCheck {
 	//회원가입 닉네임 중복체크
 	private String regnc;
 	
+	private String regpw;
+	
 	//회원가입 이메일 인증처리
 	private String regem;
 	

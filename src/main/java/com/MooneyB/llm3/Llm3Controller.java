@@ -26,7 +26,6 @@ public class Llm3Controller {
 		try {
 			System.out.println(userinput);
 			System.out.println(useinfo);
-			
 			String DataReturn = lm3.DataAnalyzing(userinput, useinfo);
 			System.out.println(DataReturn);
 			String result = lm3.generateFromLlama3(DataReturn);

@@ -19,6 +19,7 @@ public interface Llama3Repository extends CrudRepository<Expense, Long> {
 			    MEXP_AMT AS 지출가격
 			FROM Mooney_Expense
 			WHERE MEXP_MMEM_ID = :memberId
+			  AND MEXP_TYPE = 'E'
 			  AND MEXP_DT BETWEEN TRUNC(SYSDATE, 'IW')
 			                  AND TRUNC(SYSDATE, 'IW') + 6 + (23/24) + (59/1440) + (59/86400)
 			ORDER BY MEXP_DT

@@ -181,16 +181,25 @@ public class MemberService {
 				System.out.println("이미지 수정 요청 없음");
 			}
 			System.out.println(nck + pw);
-
-
-			if (pw != null && nck != null) {// 비밀번호 재인코딩
+			
+			if(!nck.equals("undefined")) {
+				System.out.println("닉네임 변경요청 처리");
 				loginMember.setMmemnick(nck);
+			}else {
+				System.out.println(1111+loginMember.getMmemnick());
+				loginMember.setMmemnick(loginMember.getMmemnick());
+			}
+
+			if (!pw.equals("undefined")) {// 비밀번호 재인코딩
+				System.out.println("비번변경 요청 처리");
 				loginMember.setMmempw(bcpe.encode(pw));
+				
+			} else {
+				System.out.println(2222+loginMember.getMmempw());
+				loginMember.setMmempw(loginMember.getMmempw());
 				
 			}
 			
-			loginMember.setMmemnick(loginMember.getMmemnick());
-			loginMember.setMmempw(loginMember.getMmempw());
 			
 			mr.save(loginMember);
 			updateRetunerMap.put("result", true);
